@@ -5,8 +5,8 @@
 # This program delays ${1:-0.001} seconds and exits with rc=0.
 
 main() {
-    local -r delay=${1:-0.01}
-    time sleep ${delay}s
+    local -r delay=${1:-0.1}
+    (time sleep ${delay}s) &>/dev/null
 }
 
 main "$@"
