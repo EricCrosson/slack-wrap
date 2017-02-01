@@ -1,7 +1,7 @@
 var assert = require('assert');
 var should = require('should');
 
-const runCommand = require('../slack-notify.js').runCommand;
+const runCommand = require('../slack-wrap.js').runCommand;
 
 function lowerBound(expectedTime) { return expectedTime * 0.75; }
 function upperBound(expectedTime) { return expectedTime * 1.25; }

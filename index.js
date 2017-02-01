@@ -4,7 +4,7 @@
 
 const _ = require('lodash');
 
-const wrapCommand = require('./slack-notify.js').wrapCommand;
+const wrapCommand = require('./slack-wrap.js').wrapCommand;
 
 function main(args) {
     const command = _.join(args, ' ');

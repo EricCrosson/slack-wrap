@@ -10,7 +10,7 @@ const date = require('date-and-time');
 const spawn = require('./spawn.js');
 
 function findRcFile() {
-    const rcfilename = '.slack-notify.json';
+    const rcfilename = '.slack-wrap.json';
     let rcfile;
     try {
         let rcdir = findup.sync(__dirname, rcfilename);
@@ -43,9 +43,9 @@ function wrapCommand(command) {
             runCommand(command).then(code => {
                 commandEndHook(rc, command, code).then(function() {
                     resolve(code);
-                });
+                }).catch(e => reject(e));
             }).catch(e => reject(e));
-        });
+        }).catch(e => reject(e));
     });
 }
 
@@ -55,9 +55,6 @@ function commandStartHook(rc, command) {
         let now = new Date();
         const msg = `Action invoked on \`${os.hostname()}\` at ` +
               `${date.format(now, 'HH:mm:ss')}: \`${command}\``;
-        // FIXME: allow for rejections, aka nicer error messages.
-        // currently when rcfile is malformed or misconfigured,
-        // complaints are so obscure
         resolve(
             slack.send({
                 text: msg,
@@ -72,9 +69,6 @@ function commandEndHook (rc, command, exit_code) {
         const slack = new Slack(rc.webhook_url);
         const msg = `\`${command}\` completed on ` +
               `\`${os.hostname()}\` with exit code \`${exit_code}\``;
-        // FIXME: allow for rejections, aka nicer error messages.
-        // currently when rcfile is malformed or misconfigured,
-        // complaints are so obscure
         resolve(
             slack.send({
                 text: msg,
