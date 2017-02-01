@@ -1,8 +1,7 @@
 var assert = require('assert');
 var should = require('should');
 
-const wrapCommand = require('../slack-notify.js').wrapCommand;
-// const wrapper = new SlackNotify('hamroctopus', "https://hooks.slack.com/services/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");
+const runCommand = require('../slack-notify.js').runCommand;
 
 function lowerBound(expectedTime) { return expectedTime * 0.75; }
 function upperBound(expectedTime) { return expectedTime * 1.25; }
@@ -13,13 +12,13 @@ function upperBound(expectedTime) { return expectedTime * 1.25; }
 function profile(command) {
     return new Promise(function(resolve, reject) {
         const start = new Date().getTime();
-        wrapCommand(command).then(function(code) {
+        runCommand(command).then(function(code) {
             resolve(new Date().getTime() - start);
         }).catch(err => reject(err));
     });
 }
 
-describe('wrapCommand', function() {
+describe('runCommand', function() {
     it('should do nothing when passed no args', function(done) {
         profile('').then(elapsedTime => {
             elapsedTime.should.be.within(0, 15);
@@ -44,7 +43,7 @@ describe('wrapCommand', function() {
     });
     it('should pass the exit code of the wrapped command', function(done) {
         const testString = `which qwertytrewq`;
-        wrapCommand(testString).then(code => {
+        runCommand(testString).then(code => {
             code.should.equal(1);
             done();
         }).catch(err => { done(err); });

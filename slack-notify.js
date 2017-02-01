@@ -1,9 +1,14 @@
 'use strict';
 
-const _ = require('lodash');
+// TODO: necessary require?
 const util = require('util');
+
+const os = require('os');
+
+const _ = require('lodash');
 const findup = require('findup');
 const Slack = require('node-slack');
+const date = require('date-and-time');
 
 const spawn = require('./spawn.js');
 
@@ -19,57 +24,55 @@ function findRcFile() {
     return rcfile;
 }
 
+module.exports.runCommand = runCommand;
+function runCommand(command) {
+    return new Promise((resolve, reject) => {
+        spawn(command.split(/\s+/)).then(code => {
+            resolve(code);
+        }).catch(e => {
+            reject(e);
+        });
+    });
+}
+
 module.exports.wrapCommand = wrapCommand;
 function wrapCommand(command) {
     return new Promise((resolve, reject) => {
         let rcfile = findRcFile();
         if (!rcfile) { reject('could not find rc file'); }
         let rc = require(rcfile);
-        console.log(rc);
 
         commandStartHook(rc, command);
-        spawn(command.split(/\s+/)).then(code => {
+        runCommand(command).then(code => {
             commandEndHook(rc, command, code);
             resolve(code);
+        }).catch(e => {
+            reject(e);
         });
     });
 }
 
 function commandStartHook(rc, command) {
-    console.log('startexechook')
-    // this.slack.send({
-    //     text: argv._[0],
-    //     channel: '@hamroctopus',
-    //     username: 'slack-notify'
-    //     // TODO: add picture
-    // });
+    const slack = new Slack(rc.webhook_url);
+    // FIXME: formatting
+    // FIXME: hook stopped firing??
+    let now = new Date();
+    const msg = `Action invoked on ${os.hostname()}: ${command}\nat ${date.format(now, 'HH:mm:ss')}`;
+    slack.send({
+        text: msg,
+        channel: rc.channel,
+        username: rc.username
+    });
 }
 
 function commandEndHook (rc, command, exit_code) {
-    console.log('END hook')
-    // slack.send({
-    //     text: argv._[0],
-    //     channel: '@hamroctopus',
-    //     username: 'slack-notify'
-    //     // TODO: add picture
-    // });
-    // resolve(exit_code)
-    // TODO: ensure this happens
-    // process.exit(exit_code);
+    const slack = new Slack(rc.webhook_url);
+    // FIXME: formatting
+    // FIXME: hook stopped firing??
+    const msg = `${command} completed on ${os.hostname()} with exit code ${exit_code}`;
+    slack.send({
+        text: msg,
+        channel: rc.channel,
+        username: rc.username
+    });
 }
-
-// function main() {
-//     var cmd = _.head(argv._);
-//     var args = _.drop(argv._);
-
-//     const command = _.join(argv._, ' ');
-//     console.log("fake main receives command: " + util.inspect(command));
-
-//     // TODO: parse .rc file
-//     const wrapper = new SlackNotify('hamroctopus', "https://hooks.slack.com/services/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");
-//     wrapper.exec(command);
-// }
-
-// if (!empty(argv._)) {
-//     main(argv._);
-// }
