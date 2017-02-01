@@ -1,6 +1,4 @@
 // var utils = require('./utils');
-// var merge = utils.merge;
-// var bus = utils.bus;
 var childProcess = require('child_process');
 var _spawn = childProcess.spawn;
 
