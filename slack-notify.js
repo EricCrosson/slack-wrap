@@ -9,16 +9,17 @@ const spawn = require('./spawn.js');
 module.exports.wrapCommand = wrapCommand;
 function wrapCommand(command) {
     return new Promise((resolve, reject) => {
+
         const cmd_array = command.split(/\s+/);
-        startExecHook();
+        commandStartHook();
         const child = spawn(cmd_array).then(code => {
-            endExecHook(code);
+            commandEndHook(code);
             resolve(code);
         });
     });
 }
 
-function startExecHook() {
+function commandStartHook() {
     console.log('startexechook')
     // this.slack.send({
     //     text: argv._[0],
@@ -28,7 +29,7 @@ function startExecHook() {
     // });
 }
 
-function endExecHook (exit_code, resolve) {
+function commandEndHook (exit_code, resolve) {
     console.log('END hook')
     // slack.send({
     //     text: argv._[0],
