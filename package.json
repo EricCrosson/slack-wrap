@@ -3,6 +3,9 @@
     "version": "0.1.0",
     "description": "Describe terminal activity over slack",
     "main": "index.js",
+    "bin": {
+        "slack-wrap": "index.js"
+    },
     "scripts": {
         "test": "mocha"
     },
