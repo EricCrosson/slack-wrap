@@ -15,6 +15,6 @@ function main(args) {
 
 let args = process.argv.slice(2);
 
-if (args) {
+if (process.argv.length > 2) {
     main(args);
 }
