@@ -1,8 +1,5 @@
 'use strict';
 
-// TODO: necessary require?
-const util = require('util');
-
 const os = require('os');
 
 const _ = require('lodash');
@@ -42,37 +39,47 @@ function wrapCommand(command) {
         if (!rcfile) { reject('could not find rc file'); }
         let rc = require(rcfile);
 
-        commandStartHook(rc, command);
-        runCommand(command).then(code => {
-            commandEndHook(rc, command, code);
-            resolve(code);
-        }).catch(e => {
-            reject(e);
+        commandStartHook(rc, command).then(function() {
+            runCommand(command).then(code => {
+                commandEndHook(rc, command, code).then(function() {
+                    resolve(code);
+                });
+            }).catch(e => reject(e));
         });
     });
 }
 
 function commandStartHook(rc, command) {
-    const slack = new Slack(rc.webhook_url);
-    // FIXME: formatting
-    // FIXME: hook stopped firing??
-    let now = new Date();
-    const msg = `Action invoked on ${os.hostname()}: ${command}\nat ${date.format(now, 'HH:mm:ss')}`;
-    slack.send({
-        text: msg,
-        channel: rc.channel,
-        username: rc.username
+    return new Promise((resolve, reject) => {
+        const slack = new Slack(rc.webhook_url);
+        let now = new Date();
+        const msg = `Action invoked on \`${os.hostname()}\` at ` +
+              `${date.format(now, 'HH:mm:ss')}: \`${command}\``;
+        // FIXME: allow for rejections, aka nicer error messages.
+        // currently when rcfile is malformed or misconfigured,
+        // complaints are so obscure
+        resolve(
+            slack.send({
+                text: msg,
+                channel: rc.channel,
+                username: rc.username
+        }));
     });
 }
 
 function commandEndHook (rc, command, exit_code) {
-    const slack = new Slack(rc.webhook_url);
-    // FIXME: formatting
-    // FIXME: hook stopped firing??
-    const msg = `${command} completed on ${os.hostname()} with exit code ${exit_code}`;
-    slack.send({
-        text: msg,
-        channel: rc.channel,
-        username: rc.username
+    return new Promise((resolve, reject) => {
+        const slack = new Slack(rc.webhook_url);
+        const msg = `\`${command}\` completed on ` +
+              `\`${os.hostname()}\` with exit code \`${exit_code}\``;
+        // FIXME: allow for rejections, aka nicer error messages.
+        // currently when rcfile is malformed or misconfigured,
+        // complaints are so obscure
+        resolve(
+            slack.send({
+                text: msg,
+                channel: rc.channel,
+                username: rc.username
+            }));
     });
 }

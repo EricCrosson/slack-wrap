@@ -20,11 +20,9 @@ module.exports = function spawn(command) {
         // }
 
         var args = '';
-
         if (!Array.isArray(command)) {
             command = [command];
         }
-
         args = command.join(' ');
 
         const env = process.env;
@@ -32,17 +30,9 @@ module.exports = function spawn(command) {
             env: env,
             stdio: stdio,
         });
-        child.stdout.on('data', (data) => {
-            console.log(`${data}`);
-        });
-
-        child.stderr.on('data', (data) => {
-            console.log(`${data}`);
-        });
-
-        child.on('close', (code) => {
-            resolve(code);
-        });
+        child.stdout.on('data', (data) => process.stdout.write(`${data}`));
+        child.stderr.on('data', (data) => process.stderr.write(`${data}`));
+        child.on('close', (code) => resolve(code));
 
         // if (config.required) {
         // if (false) {
