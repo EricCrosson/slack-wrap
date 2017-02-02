@@ -44,3 +44,15 @@ following contents:
 The values of these keys will depend on how you set up your
 `webhook_url`,
 [here](https://my.slack.com/services/new/incoming-webhook/).
+
+
+Usage
+=====
+
+Invoke `slack-wait` as you would the unix `time` command:
+
+```bash
+slack-wait './configure && make && make install'
+slack-wait "sleep 1h && echo 'Wake up! Naptime is over'"
+slack-wait sudo apt-get upgrade
+```
