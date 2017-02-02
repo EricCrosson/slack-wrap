@@ -3,8 +3,8 @@ var should = require('should');
 
 const runCommand = require('../slack-wrap.js').runCommand;
 
-function lowerBound(expectedTime) { return expectedTime * 0.75; }
-function upperBound(expectedTime) { return expectedTime * 1.25; }
+function lowerBound(expectedTime) { return expectedTime * 0.70; }
+function upperBound(expectedTime) { return expectedTime * 1.30; }
 
 /**
  * Wrap the command and return its timing profile.
