@@ -12,7 +12,6 @@
   "devDependencies": {
     "assert": "^1.4.1",
     "mocha": "^3.2.0",
-    "node-slack": "0.0.7",
     "should": "^11.2.0"
   },
   "dependencies": {
