@@ -10,6 +10,7 @@
     "test": "mocha"
   },
   "devDependencies": {
+    "assert": "^1.4.1",
     "mocha": "^3.2.0",
     "node-slack": "0.0.7",
     "should": "^11.2.0"
@@ -17,7 +18,8 @@
   "dependencies": {
     "date-and-time": "^0.4.0",
     "findup": "^0.1.5",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "node-slack": "0.0.7"
   },
   "repository": {
     "type": "git",
