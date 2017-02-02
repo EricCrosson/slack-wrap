@@ -1,6 +1,6 @@
 {
   "name": "slack-wrap",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Describe terminal activity over slack",
   "main": "index.js",
   "bin": {
