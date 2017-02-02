@@ -1,6 +1,8 @@
 Overview
 ========
 
+[![Build Status](https://travis-ci.org/EricCrosson/slack-wrap.svg?branch=master)](https://travis-ci.org/EricCrosson/slack-wrap)
+
 This package exists to notify users upon the completion of a command
 line action.
 
