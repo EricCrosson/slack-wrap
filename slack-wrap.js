@@ -39,41 +39,32 @@ function wrapCommand(command) {
         if (!rcfile) { reject('could not find rc file'); }
         let rc = require(rcfile);
 
-        commandStartHook(rc, command).then(function() {
-            runCommand(command).then(code => {
-                commandEndHook(rc, command, code).then(function() {
-                    resolve(code);
-                }).catch(e => reject(e));
-            }).catch(e => reject(e));
+        commandStartHook(rc, command);
+        runCommand(command).then(code => {
+            commandEndHook(rc, command, code);
         }).catch(e => reject(e));
     });
 }
 
 function commandStartHook(rc, command) {
-    return new Promise((resolve, reject) => {
-        const slack = new Slack(rc.webhook_url);
-        let now = new Date();
-        const msg = `Action invoked on \`${os.hostname()}\` at ` +
-              `${date.format(now, 'HH:mm:ss')}: \`${command}\``;
-        resolve(
-            slack.send({
-                text: msg,
-                channel: rc.channel,
-                username: rc.username
-        }));
+    const slack = new Slack(rc.webhook_url);
+    let now = new Date();
+    const msg = `Action invoked on \`${os.hostname()}\` at ` +
+          `${date.format(now, 'HH:mm:ss')}: \`${command}\``;
+    slack.send({
+        text: msg,
+        channel: rc.channel,
+        username: rc.username
     });
 }
 
 function commandEndHook (rc, command, exit_code) {
-    return new Promise((resolve, reject) => {
-        const slack = new Slack(rc.webhook_url);
-        const msg = `\`${command}\` completed on ` +
-              `\`${os.hostname()}\` with exit code \`${exit_code}\``;
-        resolve(
-            slack.send({
-                text: msg,
-                channel: rc.channel,
-                username: rc.username
-            }));
+    const slack = new Slack(rc.webhook_url);
+    const msg = `\`${command}\` completed on ` +
+          `\`${os.hostname()}\` with exit code \`${exit_code}\``;
+    slack.send({
+        text: msg,
+        channel: rc.channel,
+        username: rc.username
     });
 }
