@@ -42,7 +42,7 @@ describe('runCommand', function() {
         }).catch(err => done(err));
     });
     it('should pass the exit code of the wrapped command', function(done) {
-        const testString = `which qwertytrewq`;
+        const testString = `false`;
         runCommand(testString).then(code => {
             code.should.equal(1);
             done();
