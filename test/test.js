@@ -21,7 +21,7 @@ function profile(command) {
 describe('runCommand', function() {
     it('should do nothing when passed no args', function(done) {
         profile('').then(elapsedTime => {
-            elapsedTime.should.be.within(0, 20);
+            elapsedTime.should.be.within(0, 30);
             done();
         }).catch(err => done(err));
     });
