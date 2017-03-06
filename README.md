@@ -51,10 +51,10 @@ The values of these keys will depend on how you set up your
 Usage
 =====
 
-Invoke `slack-wait` as you would the unix `time` command:
+Invoke `slack-wrap` as you would the unix `time` command:
 
 ```bash
-slack-wait './configure && make && make install'
-slack-wait "sleep 1h && echo 'Wake up! Naptime is over'"
-slack-wait sudo apt-get upgrade
+slack-wrap './configure && make && make install'
+slack-wrap "sleep 1h && echo 'Wake up! Naptime is over'"
+slack-wrap sudo apt-get upgrade
 ```
